@@ -1,0 +1,116 @@
+{
+  "name": "aegis",
+  "displayName": "Aegis — On-Device Security & Code Intelligence",
+  "description": "Privacy-first secret detection and semantic code search. 100% on-device — no code ever leaves your machine.",
+  "version": "0.0.1",
+  "private": true,
+  "author": "anonymousz77",
+  "publisher": "aegis-dev",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/anonymousz77/aegis.git"
+  },
+  "bugs": {
+    "url": "https://github.com/anonymousz77/aegis/issues"
+  },
+  "homepage": "https://github.com/anonymousz77/aegis#readme",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Linters",
+    "Machine Learning",
+    "Other"
+  ],
+  "keywords": [
+    "secrets",
+    "security",
+    "privacy",
+    "local",
+    "semantic search",
+    "on-device",
+    "offline"
+  ],
+  "activationEvents": [
+    "onStartupFinished",
+    "onCommand:aegis.hello"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "aegis.hello",
+        "title": "Hello",
+        "category": "Aegis"
+      },
+      {
+        "command": "aegis.verifyOfflineMode",
+        "title": "Verify Offline Mode",
+        "category": "Aegis"
+      }
+    ],
+    "configuration": {
+      "title": "Aegis",
+      "properties": {
+        "aegis.offlineOnly": {
+          "type": "boolean",
+          "default": true,
+          "description": "Block all outbound network calls except the one-time pinned model download."
+        },
+        "aegis.secretsSeverityThreshold": {
+          "type": "string",
+          "enum": ["high", "medium", "low"],
+          "default": "medium",
+          "description": "Minimum severity level to report as a diagnostic."
+        },
+        "aegis.indexer.include": {
+          "type": "array",
+          "items": { "type": "string" },
+          "default": ["**/*"],
+          "description": "Glob patterns to include in the workspace index."
+        },
+        "aegis.indexer.exclude": {
+          "type": "array",
+          "items": { "type": "string" },
+          "default": [
+            "node_modules/**", "dist/**", "build/**", ".venv/**",
+            "target/**", ".next/**", ".turbo/**", ".aegis/**"
+          ],
+          "description": "Glob patterns to exclude from the workspace index."
+        },
+        "aegis.model.embeddings": {
+          "type": "string",
+          "default": "minilm-l6-v2",
+          "description": "Embedding model variant to use for semantic search."
+        },
+        "aegis.model.classifier": {
+          "type": "string",
+          "enum": ["gbm", "transformer"],
+          "default": "gbm",
+          "description": "Secret detection classifier: 'gbm' (fast, default) or 'transformer' (higher accuracy)."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "build": "node esbuild.js",
+    "watch": "node esbuild.js --watch",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint \"src/**/*.ts\" \"test/**/*.ts\"",
+    "test": "vitest run",
+    "package": "npm run build && vsce package --no-dependencies"
+  },
+  "devDependencies": {
+    "@types/node": "22.20.0",
+    "@types/vscode": "1.85.0",
+    "@typescript-eslint/eslint-plugin": "7.18.0",
+    "@typescript-eslint/parser": "7.18.0",
+    "@vitest/coverage-v8": "4.1.9",
+    "@vscode/vsce": "3.9.2",
+    "esbuild": "0.28.1",
+    "eslint": "8.57.1",
+    "typescript": "5.9.3",
+    "vitest": "4.1.9"
+  }
+}
